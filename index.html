@@ -1,0 +1,137 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ahr999指数</title>
+  <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <!--<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>-->
+  <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+</head>
+
+<body>
+  <div id="container" style="width: 100%; height: 100%; margin: 0 auto"></div>
+  <script>
+    // available for node.js but not for javascript because of the CORS... TAT
+    //const CoinGecko = require('coingecko-api');
+    //const CoinGeckoClient = new CoinGecko();
+    async function CalcAhr999() {
+      let now = new Date().getTime() / 1000
+      let before = now - 200 * 24 * 60 * 60
+      let nowhm = new Date(now * 1000).toLocaleString("zh-CN")
+      let beforehm = new Date(before * 1000).toLocaleString("zh-CN")
+      console.log(now, before, nowhm, beforehm)
+      let data = await CoinGeckoClient.coins.fetchMarketChartRange('bitcoin', {
+        from: before,
+        to: now,
+      })
+      data = data.data.prices
+      let pricels = []
+      for (i = 0; i < data.length; i++) {
+        pricels.push(data[i][1])
+      }
+      let avg = HMean(pricels)
+      let dayafterbtcbirth = ((now - 1230940800) / (24 * 60 * 60))
+      let dayprice = pricels[pricels.length - 1]
+      let logprice = Math.round(10 ** (5.84 * Math.log10(dayafterbtcbirth) - 17.01) * 1000) / 1000
+      let ahr999 = Math.round((dayprice / avg) * (dayprice / logprice) * 1000) / 1000
+      //console.log(avg, dayafterbtcbirth, dayprice, logprice, ahr999)
+      console.log("日期:", nowhm)
+      console.log("ahr999:", ahr999)
+      console.log("200日平均值:", avg)
+      console.log('拟合价格:', logprice)
+      console.log("当天价格:", dayprice)
+      console.log("\n")
+    }
+  </script>
+  <script>
+    Highcharts.getJSON('data.json', function (data) {
+      Highcharts.stockChart('container', {
+        rangeSelector: {
+          selected: 1,
+          inputDateFormat: "%Y-%m-%d",
+        },
+        title: {
+          text: 'Ahr999指数'
+        },
+        subtitle: {
+          text: ' 小于0.45,抄底区间;&nbsp0.45-1.2,定投区间;&nbsp大于5,起飞区间; &nbsp(数据来源: Coingecko)'
+        },
+        xAxis: {
+          type: 'datetime',
+          labels: {
+            format: '{value:%Y-%m-%d}'
+          },
+          title: {
+            text: '日期'
+          },
+        },
+        tooltip: {
+          xDateFormat: '%Y-%m-%d',
+          pointFormat: '<tr><td><b>{point.x:%Y-%m-%d}</b></td>' +
+            '</br><td>ahr999: {point.y}</td></tr>',
+        },
+        yAxis: {
+          tickPositions: [0.01, 5, 10],
+          min: 0.1,
+          max: 100,
+          title: {
+            text: 'Ahr999'
+          },
+          plotLines: [{
+            value: 0.45,
+            color: 'green',
+            dashStyle: 'shortdash',
+            width: 2,
+            label: {
+              text: '抄底线'
+            }
+          }, {
+            value: 1.2,
+            color: 'red',
+            dashStyle: 'shortdash',
+            width: 2,
+            label: {
+              text: '定投线'
+            }
+          }, {
+            value: 5,
+            color: 'blue',
+            dashStyle: 'shortdash',
+            width: 2,
+            label: {
+              text: "坐稳起飞线"
+            }
+          }]
+        },
+        series: [{
+          threshold: null,
+          type: 'area',
+          name: 'ahr999',
+          data: data,
+          tooltip: {
+            valueDecimals: 4
+          },
+          fillColor: {
+            linearGradient: {
+              x1: 0,
+              y1: 0,
+              x2: 0,
+              y2: 1
+            },
+            stops: [
+              [0, Highcharts.getOptions().colors[0]],
+              [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+            ]
+          }
+        }]
+      });
+    });
+  </script>
+</body>
+
+</html>
