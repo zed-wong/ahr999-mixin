@@ -5,7 +5,7 @@ from scipy import stats
 import math,time,json,datetime
 
 now = round(time.time())
-nybf = now - 24*60*60*365*10    #nine year before
+nybf = now - 24*60*60*365*10    #10 year before
 cg = CoinGeckoAPI()
 scdata = cg.get_coin_market_chart_range_by_id('bitcoin','usd',str(nybf),str(now))    # source data
 scdict = {}
