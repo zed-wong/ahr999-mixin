@@ -4,7 +4,7 @@
 一个提供实时更新的Ahr999指数的mixin机器人，与一个提供历史ahr999指数的web页面。
 
 ## 实例
- 网站: [https://ahr999mixin.tk]()
+ 网站: [https://ahr999mixin.tk](https://ahr999mixin.tk)
  
  mixin机器人: 7000103262
 
@@ -12,7 +12,7 @@
 ## 快速开始
 
 ### mixin机器人
-  1. 在mixin开发者界面注册一个机器人 [https://developers.mixin.one/]()
+  1. 在mixin开发者界面注册一个机器人 [https://developers.mixin.one/](https://developers.mixin.one/)
  
   2. 生成新的client secrets，并保存好。
 
