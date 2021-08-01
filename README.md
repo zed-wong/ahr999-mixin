@@ -1,11 +1,11 @@
 # Ahr999-mixin
 English | [中文](README-ZH.md)
 
-A mixin bot that offers up-to-date ahr999 index for subscribed user, and a web page which provides history data chart of the index.
+A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and a web page that provides historical data chart of the index.
 
 ## Living example
  website: [http://ahr999mixin.tk](http://ahr999mixin.tk)
- 
+
  mixin bot: 7000103262
 
 
@@ -13,7 +13,7 @@ A mixin bot that offers up-to-date ahr999 index for subscribed user, and a web p
 
 ### mixin bot
   1. Register a bot at [https://developers.mixin.one/](https://developers.mixin.one/)
- 
+
   2. Generate new client secrets
 
   3. Run `git clone github.com/who3m1/ahr999-mixin`
@@ -48,16 +48,13 @@ A mixin bot that offers up-to-date ahr999 index for subscribed user, and a web p
  - main.go 
    - Execute every 24 hours to notify the index.
    - Notify with mixin when the index hit the line.
-   - Handles the bots message module, writes subed userid to database.
-
+   - Handles the bots message module, writes subbed userid to database.
  - main.py 
    - Execute every day to keep data.json up to date.
-
  - index.html
    - The webpage of ahr999 charts.
-
  - data.json 
-   - Json file that contains timestamp and ahr999 index.
+   - A JSON file that contains timestamp and ahr999 index.
 
  - data.db 
    - Stores subscribed users.
