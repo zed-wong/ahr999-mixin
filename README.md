@@ -1,24 +1,24 @@
 # Ahr999-mixin
-English | [中文](README-ZH.md)
+[English](README-en.md) | 中文
 
-A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and a web page that provides historical data chart of the index.
+一个提供实时更新的Ahr999指数的mixin机器人，与一个提供历史ahr999指数的web页面。
 
-## Living example
- website: [http://ahr999mixin.tk](http://ahr999mixin.tk)
+## 实例
+ 网站: [http://ahr999mixin.tk](http://ahr999mixin.tk)
+ 
+ mixin机器人: 7000103262
 
- mixin bot: 7000103262
 
+## 快速开始
 
-## Quick start
+### mixin机器人
+  1. 在mixin开发者界面注册一个机器人 [https://developers.mixin.one/](https://developers.mixin.one/)
+ 
+  2. 生成新的client secrets，并保存好。
 
-### mixin bot
-  1. Register a bot at [https://developers.mixin.one/](https://developers.mixin.one/)
-
-  2. Generate new client secrets
-
-  3. Run `git clone github.com/who3m1/ahr999-mixin`
+  3. 在终端执行 `git clone github.com/who3m1/ahr999-mixin`
   
-  4. Fill main.go with your credential
+  4. 将刚生成的client secrets填入main.go 
   ```
         ClientID   = ""        
         SessionID  = ""
@@ -26,35 +26,38 @@ A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and
         PinToken   = ""
         Pin        = ""
   ```
-  5. Run `go run main.go`, then access your bot in mixin messenger.
+  5. 执行`go run main.go`，然后在mixin messenger里访问你的机器人。
 
-### website
-  1. Rent a Ubuntu server (vultr.com or digitalocean.com)
+### 网站
+  1. 租用一个云服务器(vultr.com 或 digitalocean.com)
 
-  2. Install nginx on your server
+  2. 在服务器上安装ubuntu 
 
-  3. Run `git clone github.com/who3m1/ahr999-mixin` on your server.(not needed if you have done this before.)
+  3. 在服务器上执行 `git clone github.com/who3m1/ahr999-mixin`.(如果在上一步已经执行则不需要。)
 
-  4. Copy index.html and main.py to /var/www/html/
+  4. 复制 index.html 和 main.py 到/var/www/html/
 
-  5. Run `python3 main.py` in /var/www/html
+  5. 在 /var/www/html 执行 `python3 main.py` 
 
-  6. Access your website through your server's ip, then the chart should be there.
+  6. 通过服务器的ip来访问你的网站, 图表会被展示出来。
   
-  7. Run `crontab -e`, append `0 0 * * * python3 /var/www/html/main.py` to the end of file to make it executed everyday.
+  7. 执行`crontab -e`, 在末尾添加`0 0 * * * python3 /var/www/html/main.py`，这样它会被每天执行。
 
-## File explanation
+## 文件解释
 
  - main.go 
-   - Execute every 24 hours to notify the index.
-   - Notify with mixin when the index hit the line.
-   - Handles the bots message module, writes subbed userid to database.
+   - 每24小时播报一次ahr999指数
+   - 当指数触底时通知用户
+   - 处理机器人的消息模块，写入用户信息到数据库。
+
  - main.py 
-   - Execute every day to keep data.json up to date.
+   - 用于更新ahr999指数历史数据
+
  - index.html
-   - The webpage of ahr999 charts.
+   - ahr999指数的网页
+
  - data.json 
-   - A JSON file that contains timestamp and ahr999 index.
+   - 包含timestamp和ahr999指数的json文件
 
  - data.db 
-   - Stores subscribed users.
+   - 存储已订阅的用户
