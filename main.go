@@ -643,9 +643,9 @@ func main() {
 	}
 	c := cron.New()
 	c.AddFunc("0 0 * * *", b)
+	c.Start()
 	// main loop
 	for {
-		c.Start()
-		time.Sleep(time.Hour * 24)
+		time.Sleep(time.Second * 60)
 	}
 }
