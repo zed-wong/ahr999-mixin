@@ -1,3 +1,7 @@
+// Execute every 30 mins to update the index
+// Notify with mixin when the index hit the line
+// Handle the bots message module, write subed userid to database
+
 package main
 
 import (
@@ -11,9 +15,11 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	mixin "github.com/fox-one/mixin-sdk-go"
+        "github.com/robfig/cron/v3"
 	"github.com/gofrs/uuid"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/montanaflynn/stats"
@@ -22,11 +28,11 @@ import (
 
 //mixin bot config
 const (
-	ClientID   = ""
-	SessionID  = ""
-	PrivateKey = ""
-	PinToken   = ""
-	Pin        = ""
+	ClientID   = 
+	SessionID  = 
+	PrivateKey = 
+	PinToken   = 
+	Pin        = 
 )
 
 //coingecko api host
@@ -116,6 +122,20 @@ func deleteSubuser(db *sql.DB, UserID string) {
 }
 
 func displaySubuser(db *sql.DB) string {
+	/*
+	   row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
+	   if err != nil {
+	           log.Fatalln(err)
+	   }
+	   defer row.Close()
+	   for row.Next() {
+	           var userid string
+	           var convertionid string
+	           var sub bool
+	           row.Scan(&userid, &convertionid, &sub)
+	           log.Println("userid:", userid, "\nconversation:", convertionid, "\nsub:", sub)
+	   }
+	*/
 	length, err := db.Query("SELECT COUNT(UserID) FROM subuser")
 	if err != nil {
 		log.Fatalln(err)
@@ -250,7 +270,6 @@ func goMixinMsg(client *mixin.Client, ctx context.Context, data []byte, Conversa
 }
 
 func MixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, data []byte) {
-	//并发发送消息还没做
 	row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
 	if err != nil {
 		log.Fatalln(err)
@@ -435,6 +454,10 @@ func getahr999xstring() string {
 	return datastring
 }
 
+// 30 mins check if hit: send message to me (DONE)
+// subscribe module							(db DONE)
+// (payment module)(web for sub)
+
 func message() {
 	ahr999button := `{"label": "Ahr999", "action": "input:ahr999", "color": "#5979F0"}`
 	ahr999xbutton := `{"label": "Ahr999X", "action": "input:ahr999x", "color": "#5979F0"}`
@@ -614,10 +637,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// main loop
-	for {
+	b := func(){
 		index := getahr999string()
 		goMixinSubBroadcast(sqliteDatabase, client, ctx, []byte(index), &wg)
+	}
+	c := cron.New()
+	c.AddFunc("0 0 * * *", b)
+	// main loop
+	for {
+		c.Start()
 		time.Sleep(time.Hour * 24)
 	}
 }
