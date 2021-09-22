@@ -8,6 +8,12 @@
  
  mixin机器人: 7000103262
 
+## API
+ Endpoint: [178.128.102.70/api](http://178.128.102.70/api)
+ - ahr999:ahr999 Index
+ - avg:200天定投平均成本
+ - logprice:拟合价格
+ - price:coingecko现价
 
 ## 快速开始
 
