@@ -1,7 +1,3 @@
-// Execute every 30 mins to update the index
-// Notify with mixin when the index hit the line
-// Handle the bots message module, write subed userid to database
-
 package main
 
 import (
