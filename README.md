@@ -9,6 +9,11 @@
  mixin机器人: 7000103262
  
 
+## 计算ahr999指数
+
+[main.go - getahr999()](https://github.com/who3m1/ahr999-mixin/blob/main/main.go#L327)
+[main.py](https://github.com/who3m1/ahr999-mixin/edit/main/main.py#L40)
+
 ## 快速开始
 
 ### mixin机器人
@@ -28,26 +33,11 @@
   ```
   5. 执行`go run main.go`，然后在mixin messenger里访问你的机器人。
 
-### 网站
-  1. 租用一个云服务器(vultr.com 或 digitalocean.com)
 
-  2. 在服务器上安装ubuntu 
-
-  3. 在服务器上执行 `git clone github.com/who3m1/ahr999-mixin`.(如果在上一步已经执行则不需要。)
-
-  4. 复制 index.html 和 main.py 到/var/www/html/
-
-  5. 在 /var/www/html 执行 `python3 main.py` 
-
-  6. 通过服务器的ip来访问你的网站, 图表会被展示出来。
-  
-  7. 执行`crontab -e`, 在末尾添加`0 0 * * * python3 /var/www/html/main.py`，这样它会被每天执行。
-
-## 文件解释
+## 文件
 
  - main.go 
    - 每24小时播报一次ahr999指数
-   - 当指数触底时通知用户
    - 处理机器人的消息模块，写入用户信息到数据库。
 
  - main.py 
@@ -58,6 +48,3 @@
 
  - data.json 
    - 包含timestamp和ahr999指数的json文件
-
- - data.db 
-   - 存储已订阅的用户
