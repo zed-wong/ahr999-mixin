@@ -12,6 +12,7 @@
 ## 计算ahr999指数
 
 [main.go - getahr999()](https://github.com/who3m1/ahr999-mixin/blob/main/main.go#L327)
+
 [main.py](https://github.com/who3m1/ahr999-mixin/edit/main/main.py#L40)
 
 ## 快速开始
