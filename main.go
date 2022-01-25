@@ -384,7 +384,7 @@ func getahr999string() string {
 	for _, xd := range values {
 		valueslice = append(valueslice, xd.Num)
 	}
-	avg, err := stats.HarmonicMean(valueslice)
+	avg, err := stats.GeometricMean(valueslice)
 	if err != nil {
 		log.Fatal(err)
 	}
