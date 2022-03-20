@@ -11,9 +11,9 @@
 
 ## 计算ahr999指数
 
-[main.go - getahr999()](https://github.com/who3m1/ahr999-mixin/blob/main/main.go#L327)
+[main.go - getahr999()](https://github.com/zed-wong/ahr999-mixin/blob/main/main.go#L327)
 
-[main.py](https://github.com/who3m1/ahr999-mixin/blob/main/main.py#L40)
+[main.py](https://github.com/zed-wong/ahr999-mixin/blob/main/main.py#L40)
 
 ## 快速开始
 
@@ -22,7 +22,7 @@
  
   2. 生成新的client secrets，并保存好。
 
-  3. 在终端执行 `git clone github.com/who3m1/ahr999-mixin`
+  3. 在终端执行 `git clone github.com/zed-wong/ahr999-mixin`
   
   4. 将刚生成的client secrets填入main.go 
   ```
