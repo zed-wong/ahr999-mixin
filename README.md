@@ -49,3 +49,13 @@
 
  - data.json 
    - 包含timestamp和ahr999指数的json文件
+
+## 其他指标
+
+恐慌指数 https://alternative.me/crypto/fear-and-greed-index/
+彩虹图 https://www.blockchaincenter.net/en/bitcoin-rainbow-chart/
+S2F https://studio.glassnode.com/metrics?a=BTC&category=Market%20Indicators&chartStyle=line&m=indicators.StockToFlowRatio&mAvg=7&mMedian=0&mScl=log&pScl=log&zoom=all
+Pi Cycle https://www.lookintobitcoin.com/charts/pi-cycle-top-indicator/
+MVRV Z https://www.lookintobitcoin.com/charts/mvrv-zscore/
+Bitcoin Price Models https://charts.woobull.com/bitcoin-price-models/
+Mayer index: https://stats.buybitcoinworldwide.com/mayermultiple/
