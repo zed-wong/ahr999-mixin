@@ -4,7 +4,7 @@ English | [中文](README.md)
 A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and a web page that provides historical data chart of the index.
 
 ## Living example
- website: [http://ahr999mixin.tk](http://ahr999mixin.tk)
+ website: [http://ahr999.tk](http://ahr999.tk)
 
  mixin bot: 7000103262
 
