@@ -31,6 +31,14 @@ const (
 	Pin        = 
 )
 
+var (
+	UpdatePeriod = time.Minute
+	ALastUpdateAt = "2022-08-31T15:00:21Z"
+	AString = ""
+	XLastUpdateAt = "2022-08-31T15:00:21Z"
+	XString = ""
+)
+
 //coingecko api host
 const apihost = "https://api.coingecko.com/api/v3"
 
@@ -324,6 +332,20 @@ func checkCount(rows *sql.Rows) (count int) {
 	return count
 }
 
+func checkOutdated(old time.Time, period time.Duration) bool{
+	if old.Add(period).Before(time.Now()) {
+		return true
+	}
+	return false
+}
+
+func formatRFC3339ToTime(s string) time.Time{
+	if t, err := time.Parse(time.RFC3339, s); err == nil {
+		return t
+	}
+	return time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
+}
+
 func getahr999() float64 {
 	now := time.Now()
 	nowux := now.Unix()
@@ -373,6 +395,10 @@ func getahr999x() float64 {
 }
 
 func getahr999string() string {
+	if !checkOutdated(formatRFC3339ToTime(ALastUpdateAt), UpdatePeriod) {
+		ALastUpdateAt = time.Now().Format(time.RFC3339)
+		return AString
+	}
 	now := time.Now()
 	nowux := now.Unix()
 	before := nowux - 24*200*60*60
@@ -384,7 +410,7 @@ func getahr999string() string {
 	for _, xd := range values {
 		valueslice = append(valueslice, xd.Num)
 	}
-	avg, err := stats.GeometricMean(valueslice)
+	avg, err := stats.HarmonicMean(valueslice)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -408,10 +434,16 @@ func getahr999string() string {
 		section = "当前区间：已起飞区间"
 	}
 	datastring := "当前价格:" + prices + "\n200日定投成本:" + avgs + "\n拟合价格:" + logprices + "\nAhr999指数:" + ahr999s + "\n" + section
+	ALastUpdateAt = time.Now().Format(time.RFC3339)
+	AString = datastring
 	return datastring
 }
 
 func getahr999xstring() string {
+	if !checkOutdated(formatRFC3339ToTime(ALastUpdateAt), UpdatePeriod) {
+		XLastUpdateAt = time.Now().Format(time.RFC3339)
+		return XString
+	}
 	now := time.Now()
 	nowux := now.Unix()
 	before := nowux - 24*200*60*60
@@ -447,12 +479,10 @@ func getahr999xstring() string {
 		section = "当前区间：抄底区间"
 	}
 	datastring := "当前价格:" + prices + "\n200日定投成本:" + avgs + "\n拟合价格:" + logprices + "\nAhr999X指数:" + ahr999s + "\n" + section
+	XLastUpdateAt = time.Now().Format(time.RFC3339)
+	XString = datastring
 	return datastring
 }
-
-// 30 mins check if hit: send message to me (DONE)
-// subscribe module							(db DONE)
-// (payment module)(web for sub)
 
 func message() {
 	ahr999button := `{"label": "Ahr999", "action": "input:ahr999", "color": "#5979F0"}`
@@ -506,7 +536,7 @@ Ahr999指数 = （比特币价格/200日定投成本） * （比特币价格/指
 - ahr999指数大于5，处于顶部区间。
 
 `
-	tunbtclink := "https://cdn.fromfriend.com/HODLBITCOIN_ahr999.pdf"
+	tunbtclink := "http://cdn.fromfriend.com/HODLBITCOIN_ahr999.pdf"
 
 	sqliteDatabase, _ := sql.Open("sqlite3", "./sqlite.db")
 	defer sqliteDatabase.Close()

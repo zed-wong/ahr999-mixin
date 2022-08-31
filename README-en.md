@@ -16,7 +16,7 @@ A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and
 
   2. Generate new client secrets
 
-  3. Run `git clone github.com/who3m1/ahr999-mixin`
+  3. Run `git clone github.com/zed-wong/ahr999-mixin`
   
   4. Fill main.go with your credential
   ```
@@ -33,7 +33,7 @@ A mixin bot that offers an up-to-date ahr999 index for the subscribed users, and
 
   2. Install nginx on your server
 
-  3. Run `git clone github.com/who3m1/ahr999-mixin` on your server.(not needed if you have done this before.)
+  3. Run `git clone github.com/zed-wong/ahr999-mixin` on your server.(not needed if you have done this before.)
 
   4. Copy index.html and main.py to /var/www/html/
 

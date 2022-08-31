@@ -7,5 +7,6 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/mattn/go-sqlite3 v1.14.7
 	github.com/montanaflynn/stats v0.6.6
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/tidwall/gjson v1.8.1
 )
