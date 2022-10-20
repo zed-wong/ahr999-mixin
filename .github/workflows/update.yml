@@ -22,7 +22,7 @@ jobs:
         python main.py
     - name: Commit
       run: |
-        git config --global user.name "zed-wong"
+        git config --global user.name "Action user"
         git add .
         git commit -m "Update json"
     - name: Push
