@@ -17,3 +17,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install pycoingecko
         pip install scipy
+    - name: Run main.py
+      run: |
+        python main.py
+    - name: Commit
+      run: |
+        git add .
+        git commit -m "Update json"
+    - name: Push
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
