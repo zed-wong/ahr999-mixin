@@ -1,8 +1,7 @@
 name: Update website index
 on:
-  push
-#   schedule:
-#     - cron: "0 0 * * *"
+   schedule:
+     - cron: "0 0 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
