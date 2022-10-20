@@ -13,12 +13,11 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - name: Install 
-      run:
+    - run:
         python -m pip install --upgrade pip
-      run:
+    - run:
         pip install pycoingecko
-      run:
+    - run:
         pip install scipy
 
     - name: Update index
