@@ -4,7 +4,7 @@
 一个提供实时更新的Ahr999指数的mixin机器人，与一个提供历史ahr999指数的web页面。
 
 ## 实例
- 网站: [http://ahr999.tk](http://ahr999.tk)
+ 网站: [https://zed-wong.github.io/ahr999-mixin/](https://zed-wong.github.io/ahr999-mixin/)
  
  mixin机器人: 7000103262
  
