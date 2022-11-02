@@ -21,7 +21,6 @@ jobs:
         python main.py
     - name: Commit
       run: |
-        git config --global user.email "action@github.com"
         git config --global user.name "github-actions"
         git add .
         git commit -m "Update json"
