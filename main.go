@@ -24,11 +24,11 @@ import (
 
 //mixin bot config
 const (
-	ClientID   = 
-	SessionID  = 
-	PrivateKey = 
-	PinToken   = 
-	Pin        = 
+        ClientID   = ""
+        SessionID  = ""
+        PrivateKey = ""
+        PinToken   = ""
+        Pin        = ""
 )
 
 var (
@@ -48,7 +48,7 @@ func createdb() {
 	log.Println("Creating sqlite db...")
 	file, err := os.Create("sqlite.db")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	file.Close()
 	log.Println("sqlite db created")
@@ -62,7 +62,7 @@ func createTable(db *sql.DB) {
 	);`
 	statement, err := db.Prepare(createTablesql)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	statement.Exec()
 	log.Println("subuser table created")
@@ -73,7 +73,7 @@ func checkSubUser(db *sql.DB, UserID string) bool {
 	checkSubusersql := fmt.Sprintf("SELECT UserID FROM subuser WHERE UserID = '%s'", UserID)
 	row, err := db.Query(checkSubusersql)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer row.Close()
 	var userid string
@@ -92,11 +92,11 @@ func insertSubuser(db *sql.DB, UserID string, ConversationID string, Sub bool) {
 	insertSubuersql := `INSERT OR IGNORE INTO subuser(UserID, ConversationID, Sub) VALUES (?,?,?)`
 	statement, err := db.Prepare(insertSubuersql)
 	if err != nil {
-		log.Fatalln("1", err)
+		log.Println("1", err)
 	}
 	_, err = statement.Exec(UserID, ConversationID, Sub)
 	if err != nil {
-		log.Fatalln("2", err)
+		log.Println("2", err)
 	}
 }
 
@@ -104,11 +104,11 @@ func controlSub(db *sql.DB, toggle, UserID string) {
 	updateSubsql := fmt.Sprintf("UPDATE subuser SET Sub = '%s' WHERE UserID = '%s'", toggle, UserID)
 	statement, err := db.Prepare(updateSubsql)
 	if err != nil {
-		log.Fatalln("1", err)
+		log.Println("1", err)
 	}
 	_, err = statement.Exec()
 	if err != nil {
-		log.Fatalln("2", err)
+		log.Println("2", err)
 	}
 	log.Println(toggle + " sub succeed")
 }
@@ -117,11 +117,11 @@ func deleteSubuser(db *sql.DB, UserID string) {
 	deleteSubusersql := `DELETE FROM subuser WHERE UserID = ?`
 	statement, err := db.Prepare(deleteSubusersql)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	_, err = statement.Exec(UserID)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 }
 
@@ -129,7 +129,7 @@ func displaySubuser(db *sql.DB) string {
 	/*
 	   row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
 	   if err != nil {
-	           log.Fatalln(err)
+	           log.Println(err)
 	   }
 	   defer row.Close()
 	   for row.Next() {
@@ -142,7 +142,7 @@ func displaySubuser(db *sql.DB) string {
 	*/
 	length, err := db.Query("SELECT COUNT(UserID) FROM subuser")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer length.Close()
 	var lg string
@@ -157,7 +157,7 @@ func statusSubuser(db *sql.DB, UserID string) string {
 	statusSubusersql := fmt.Sprintf("SELECT Sub FROM subuser WHERE UserID = '%s'", UserID)
 	rows, err := db.Query(statusSubusersql)
 	if err != nil {
-		log.Fatalln("1", err)
+		log.Println("1", err)
 	}
 	defer rows.Close()
 	var status bool
@@ -276,12 +276,12 @@ func goMixinMsg(client *mixin.Client, ctx context.Context, data []byte, Conversa
 func MixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, data []byte) {
 	row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer row.Close()
 	length, err := db.Query(`select count(*) from subuser where sub = "1" or sub = "true"`)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer length.Close()
 	lg := checkCount(length)
@@ -300,12 +300,12 @@ func MixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, da
 func goMixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, data []byte, wg *sync.WaitGroup) {
 	row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer row.Close()
 	length, err := db.Query(`select count(*) from subuser where sub = "1" or sub = "true"`)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	defer length.Close()
 	lg := checkCount(length)
@@ -360,7 +360,7 @@ func getahr999() float64 {
 	}
 	avg, err := stats.HarmonicMean(valueslice)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	js1 := CoingeckoPrice("bitcoin", "usd")
 	price := gjson.Get(js1, "bitcoin.usd").Float()
@@ -384,7 +384,7 @@ func getahr999x() float64 {
 	}
 	avg, err := stats.HarmonicMean(valueslice)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	js1 := CoingeckoPrice("bitcoin", "usd")
 	price := gjson.Get(js1, "bitcoin.usd").Float()
@@ -412,7 +412,8 @@ func getahr999string() string {
 	}
 	avg, err := stats.HarmonicMean(valueslice)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return ""
 	}
 	avgs := fmt.Sprintf("%.3f", avg)
 	js1 := CoingeckoPrice("bitcoin", "usd")
@@ -457,7 +458,8 @@ func getahr999xstring() string {
 	}
 	avg, err := stats.HarmonicMean(valueslice)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return ""
 	}
 	avgs := fmt.Sprintf("%.3f", avg)
 	js1 := CoingeckoPrice("bitcoin", "usd")
@@ -550,7 +552,7 @@ Ahr999指数 = （比特币价格/200日定投成本） * （比特币价格/指
 	h := func(ctx context.Context, msg *mixin.MessageView, userID string) error {
 		client, err := mixin.NewFromKeystore(s)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		if userID, _ := uuid.FromString(msg.UserID); userID == uuid.Nil {
 			return nil
@@ -628,7 +630,7 @@ Ahr999指数 = （比特币价格/200日定投成本） * （比特币价格/指
 
 	client, err := mixin.NewFromKeystore(s)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	for {
 		if err := client.LoopBlaze(ctx, mixin.BlazeListenFunc(h)); err != nil {
@@ -660,7 +662,7 @@ func main() {
 	}
 	client, err := mixin.NewFromKeystore(s)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	b := func(){
