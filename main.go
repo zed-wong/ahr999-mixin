@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"sync"
 	"time"
 
 	mixin "github.com/fox-one/mixin-sdk-go"
@@ -259,7 +258,7 @@ func MixinMsg(client *mixin.Client, ctx context.Context, data []byte, Conversati
 	return client.SendMessage(ctx, reply)
 }
 
-func goMixinMsg(client *mixin.Client, ctx context.Context, data []byte, ConversationID, RecipientID string, wg *sync.WaitGroup) error {
+func goMixinMsg(client *mixin.Client, ctx context.Context, data []byte, ConversationID, RecipientID string) error {
 	payload := base64.StdEncoding.EncodeToString(data)
 	messageUuid, _ := uuid.NewV4()
 	reply := &mixin.MessageRequest{
@@ -269,7 +268,6 @@ func goMixinMsg(client *mixin.Client, ctx context.Context, data []byte, Conversa
 		Category:       "PLAIN_TEXT",
 		Data:           payload,
 	}
-	defer wg.Done()
 	return client.SendMessage(ctx, reply)
 }
 
@@ -297,7 +295,7 @@ func MixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, da
 	}
 }
 
-func goMixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, data []byte, wg *sync.WaitGroup) {
+func goMixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, data []byte) {
 	row, err := db.Query("SELECT * FROM subuser ORDER BY Sub")
 	if err != nil {
 		log.Println(err)
@@ -308,18 +306,15 @@ func goMixinSubBroadcast(db *sql.DB, client *mixin.Client, ctx context.Context, 
 		log.Println(err)
 	}
 	defer length.Close()
-	lg := checkCount(length)
-	wg.Add(lg)
 	for row.Next() {
 		var userid string
 		var convertionid string
 		var sub bool
 		row.Scan(&userid, &convertionid, &sub)
 		if sub {
-			go goMixinMsg(client, ctx, data, convertionid, userid, wg)
+			goMixinMsg(client, ctx, data, convertionid, userid)
 		}
 	}
-	wg.Wait()
 }
 
 func checkCount(rows *sql.Rows) (count int) {
@@ -346,7 +341,7 @@ func formatRFC3339ToTime(s string) time.Time{
 	return time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 }
 
-func getahr999() float64 {
+func getahr999() (float64,float64,float64,float64) {
 	now := time.Now()
 	nowux := now.Unix()
 	before := nowux - 24*200*60*60
@@ -367,7 +362,7 @@ func getahr999() float64 {
 	bornday := (nowux - 1230940800) / (24 * 60 * 60)
 	logprice := math.Pow(10, 5.84*math.Log10(float64(bornday))-17.01)
 	ahr999 := math.Round((price/avg)*(price/logprice)*1000) / 1000
-	return ahr999
+	return price,avg,logprice,ahr999
 }
 
 func getahr999x() float64 {
@@ -399,30 +394,10 @@ func getahr999string() string {
 		ALastUpdateAt = time.Now().Format(time.RFC3339)
 		return AString
 	}
-	now := time.Now()
-	nowux := now.Unix()
-	before := nowux - 24*200*60*60
-	nowuxs := strconv.Itoa(int(nowux))
-	befores := strconv.Itoa(int(before))
-	valueslice := []float64{}
-	data := CoingeckoMarketChartRange("bitcoin", "usd", befores, nowuxs)
-	values := gjson.Get(data, "prices.#.1").Array() //200 day data list
-	for _, xd := range values {
-		valueslice = append(valueslice, xd.Num)
-	}
-	avg, err := stats.HarmonicMean(valueslice)
-	if err != nil {
-		log.Println(err)
-		return ""
-	}
-	avgs := fmt.Sprintf("%.3f", avg)
-	js1 := CoingeckoPrice("bitcoin", "usd")
-	price := gjson.Get(js1, "bitcoin.usd").Float()
-	prices := gjson.Get(js1, "bitcoin.usd").String()
-	bornday := (nowux - 1230940800) / (24 * 60 * 60)
-	logprice := math.Pow(10, 5.84*math.Log10(float64(bornday))-17.01)
-	logprices := fmt.Sprintf("%.3f", logprice)
-	ahr999 := math.Round((price/avg)*(price/logprice)*1000) / 1000
+	price, avg, logprice, ahr999 := getahr999()
+	prices := fmt.Sprintf("%.2f",price)
+	avgs := fmt.Sprintf("%.2f",avg)
+	logprices := fmt.Sprintf("%.2f", logprice)
 	ahr999s := fmt.Sprintf("%.3f", ahr999)
 	var section string
 	if ahr999 <= 0.45 {
@@ -433,6 +408,9 @@ func getahr999string() string {
 		section = "当前区间: 坐稳起飞区间"
 	} else if ahr999 > 5 {
 		section = "当前区间：已起飞区间"
+	} else {
+		time.Sleep(1*time.Second)
+		return getahr999string()
 	}
 	datastring := "当前价格:" + prices + "\n200日定投成本:" + avgs + "\n拟合价格:" + logprices + "\nAhr999指数:" + ahr999s + "\n" + section
 	ALastUpdateAt = time.Now().Format(time.RFC3339)
@@ -479,6 +457,9 @@ func getahr999xstring() string {
 		section = "当前区间: 定投区间"
 	} else if ahr999x > 5 {
 		section = "当前区间：抄底区间"
+	} else {
+		time.Sleep(1*time.Second)
+		return getahr999xstring()
 	}
 	datastring := "当前价格:" + prices + "\n200日定投成本:" + avgs + "\n拟合价格:" + logprices + "\nAhr999X指数:" + ahr999s + "\n" + section
 	XLastUpdateAt = time.Now().Format(time.RFC3339)
@@ -641,7 +622,6 @@ Ahr999指数 = （比特币价格/200日定投成本） * （比特币价格/指
 }
 
 func main() {
-	var wg sync.WaitGroup
 	// message module
 	go message()
 	// check if database file exist
@@ -667,7 +647,7 @@ func main() {
 
 	b := func(){
 		index := getahr999string()
-		goMixinSubBroadcast(sqliteDatabase, client, ctx, []byte(index), &wg)
+		goMixinSubBroadcast(sqliteDatabase, client, ctx, []byte(index))
 	}
 	c := cron.New()
 	c.AddFunc("0 0 * * *", b)
