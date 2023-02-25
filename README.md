@@ -60,3 +60,4 @@
 - Bitcoin Price Models https://charts.woobull.com/bitcoin-price-models/
 - Mayer index: https://stats.buybitcoinworldwide.com/mayermultiple/
 - 欢迎提交PR添加更多指标
+
